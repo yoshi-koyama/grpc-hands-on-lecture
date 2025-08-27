@@ -1,0 +1,13 @@
+// protoのバージョンの宣言
+syntax = "proto3";
+
+// protoファイルから自動生成させるGoのコードの置き先
+// (詳細は4章にて)
+option go_package = "gen/grpc";
+
+// packageの宣言
+package other;
+
+message OtherRequest {
+  string name = 1;
+}

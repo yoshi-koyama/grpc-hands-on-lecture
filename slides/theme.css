@@ -1,0 +1,243 @@
+/*!
+ *@theme grpc-hands-on
+ * @auto-scaling true
+ * @size 16:9 1280px 720px
+ * @size 4:3 960px 720px
+*/
+
+/* defaultテーマをインポートしています */
+
+/* 全体スタイル
+* デフォルトテーマインポート
+* Bootstrapインポート（余白調整など用に）
+* Google Fontsインポート（スライド原本で採用していたフォント）
+ */
+@import 'default';
+@import url('https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css');
+@import url('https://fonts.googleapis.com/css2?family=Kosugi&family=Roboto+Mono&display=swap');
+
+:root {
+    --theme-color-dark: black;
+    --theme-color-light: black;
+    --theme-color-gray: black;
+    --theme-color-light-gray: black;
+}
+
+section {
+    justify-content: none;
+    display: block;
+    font-family: 'Kosugi', sans-serif, 'Roboto Mono', monospace;
+    color: var(--theme-color-dark);
+    font-size: 1.5rem;
+}
+
+h1 {
+    font-size: 3.5rem;
+    border-bottom: solid 0.5rem var(--theme-color-gray);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    color: var( --theme-color-dark);
+}
+
+h2 {
+    border-bottom: solid 0.25rem var(--theme-color-gray);
+}
+p {
+    font-size: 1.5rem;
+    line-height: 3rem;
+    color: var(--theme-color-dark);
+}
+
+ul > li > ul > li {
+    line-height: 3rem;
+}
+li::marker {
+    color: var(--theme-color-light);
+}
+
+pre {
+    border: solid 0.1rem var(--theme-color-gray);
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1rem;
+}
+
+table {
+    margin: auto;
+}
+
+table thead tr {
+    background-color: var(--theme-color-light);
+    color: #fff;
+}
+table td {
+    background-color: #fff;
+}
+
+a {
+    color: var(--theme-color-light);
+    text-decoration: underline;
+}
+
+img {
+    padding: 0%;
+}
+
+/* 見出しの上下中央揃え */
+section.titlepage,
+section.endpage,
+section.middle,
+section.middle-text-middle,
+section.middle-text-small {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* shared - middleは中表紙 */
+section.titlepage h2,
+section.endpage h2,
+section.middle h2 {
+    width: 100%;
+    text-align: center;
+    font-size: 5rem;
+    letter-spacing: 0.1rem;
+    border-bottom: none;
+}
+
+/* 中表紙 4rem */
+section.middle-text-middle h2 {
+    width: 100%;
+    text-align: center;
+    font-size: 4rem;
+    letter-spacing: 0.1rem;
+    border-bottom: none;
+}
+
+/* 中表紙 3rem */
+section.middle-text-small h2 {
+    width: 100%;
+    text-align: center;
+    font-size: 3rem;
+    letter-spacing: 0.1rem;
+    border-bottom: none;
+}
+
+/* titlepage - タイトルページ */
+section.titlepage p {
+    font-weight: bold;
+    letter-spacing: 0.1rem;
+    width: 100%;
+    position: absolute;
+    top: 29%;
+    left: 0;
+    padding-top: 0;
+    text-align: center;
+}
+
+/* bubble - 吹き出し */
+.bubble {
+    position: relative;
+    display: inline-block;
+    width: 80%;
+    text-align: center;
+    padding: 25px;
+    background-color: var(--theme-color-light-gray);
+    border-radius: 5px;
+    margin-left: 10%;
+    margin-top: 2rem;
+}
+.bubble:before {
+    content: '';
+    position: absolute;
+    display: block;
+    z-index: 1;
+    border-style: solid;
+    border-color: var(--theme-color-light-gray) transparent;
+    border-width: 20px 0 0 20px;
+    bottom: -20px;
+    left: 50%;
+    margin-left: -10px;
+}
+
+/* img_float_l - imgにfloat:leftを付与 */
+section.img_float_l img {
+    float: left;
+    margin-top: 0.5rem;
+    margin-bottom: auto;
+    margin-right: 2rem;
+}
+/* img_float_r - imgにfloat:rightを付与 */
+section.img_float_r img {
+    float: right;
+    margin-top: 0.5rem;
+    margin-bottom: auto;
+    margin-left: 2rem;
+}
+
+/* pre_float_l - preにfloat:leftを付与 */
+section.pre_float_l pre {
+    width: 50%;
+    height: 80%;
+    float: left;
+    margin-top: 0.5rem;
+    margin-bottom: auto;
+    margin-right: 2rem;
+}
+/* pre_float_r - preにfloat:rightを付与 */
+section.pre_float_r pre {
+    width: 50%;
+    height: 80%;
+    float: right;
+    margin-top: 0.5rem;
+    margin-bottom: auto;
+    margin-left: 2rem;
+}
+
+/* section.img-w90 - 画像幅90% */
+section.img-w90 img {
+    width: 90%;
+    margin-left: 5%;
+}
+
+/* section.img-w80 - 画像幅80% */
+section.img-w80 img {
+    width: 80%;
+    margin-left: 10%;
+}
+
+/* section.img-w70 - 画像幅70% */
+section.img-w70 img {
+    width: 70%;
+    margin-left: 15%;
+}
+
+/* section.img-w60 - 画像幅60% */
+section.img-w60 img {
+    width: 60%;
+    margin-left: 20%;
+}
+
+/* section.img-w50 - 画像幅50% */
+section.img-w50 img {
+    width: 50%;
+    margin-left: 25%;
+}
+
+/* section.img-w40 - 画像幅40% */
+section.img-w40 img {
+    width: 40%;
+    margin-left: 25%;
+}
+
+/* endpage - おわりページ */
+section.endpage p {
+    letter-spacing: 0.1rem;
+    width: 100%;
+    position: absolute;
+    top: 60%;
+    left: 0;
+    padding-top: 0;
+    text-align: center;
+}

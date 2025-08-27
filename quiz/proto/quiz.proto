@@ -1,0 +1,43 @@
+syntax = "proto3";
+package quiz.v1;
+
+// あなたの go module に必ず合わせてください（↓は例）
+option go_package = "/quizapp/gen";
+
+message ClientMsg {
+  string player_id = 1; // 初回は空でOK（サーバから払い出し）
+  oneof payload {
+    Join join       = 10;
+    Buzz buzz       = 11;
+    Answer answer   = 12;
+    Heartbeat hb    = 13;
+  }
+}
+message Join { string name = 1; }
+message Buzz { int64 ts_ms = 1; }
+message Answer { string text = 1; }
+message Heartbeat {}
+
+message ServerMsg {
+  oneof payload {
+    Welcome  welcome    = 1;
+    Question question   = 2;
+    BuzzResult buzz     = 3;
+    Judge    judge      = 4;
+    Scoreboard board    = 5;
+    Info     info       = 6;
+    Error    err        = 7;
+  }
+}
+message Welcome  { string player_id = 1; string name = 2; }
+message Question { int32 index = 1; string text = 2; }
+message BuzzResult { string player_id = 1; string name = 2; } // 誰が早押しを取ったか
+message Judge { string player_id = 1; bool correct = 2; string answer = 3; string comment = 4; }
+message Scoreboard { repeated Score scores = 1; }
+message Score { string name = 1; int32 points = 2; }
+message Info { string text = 1; }
+message Error { string text = 1; }
+
+service Quiz {
+  rpc Play(stream ClientMsg) returns (stream ServerMsg);
+}
