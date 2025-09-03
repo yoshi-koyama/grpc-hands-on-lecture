@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	hellopb "grpc-hands-on/gen/grpc"
+	pb "grpc-hands-on/gen/grpc"
 	"log"
 )
 
@@ -24,14 +24,14 @@ func main() {
 	}
 	defer conn.Close()
 
-	client := hellopb.NewGreetingServiceClient(conn)
+	client := pb.NewGreetingServiceClient(conn)
 
 	for {
 		fmt.Print("好きな名前を入力してエンターキーを押してね: ")
 		var name string
 		fmt.Scan(&name)
 
-		req := &hellopb.HelloRequest{
+		req := &pb.HelloRequest{
 			Name: name,
 		}
 
