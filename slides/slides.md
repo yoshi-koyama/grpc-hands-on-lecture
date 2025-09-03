@@ -126,10 +126,53 @@ REST APIでは「1リクエスト＝1レスポンス」なのに対し、スト�
 ## gRPC とは
 
 gRPC で対応できる通信方式は以下の４つです。
-- Unary RPC: クライアントとサーバーのリクエストとレスポンスが１対１
-- Server streaming RPC: クライアントのリクエストに対してサーバーが複数のレスポンスを返す。
-- Client streaming RPC: クライアントからサーバーに対して複数のリクエストを送る。
-- Bidirectional streaming RPC: クライアントからはじめのリクエストが送られたあと、クライアントとサーバーはどちらも任意のタイミングでリクエストとレスポンスをやりとりできる。
+- Unary RPC
+- Server streaming RPC
+- Client streaming RPC 
+- Bidirectional streaming RPC 
+
+
+
+---
+
+## Unary RPC
+
+<!-- _class: img-w60 -->
+![img](./grpc-unary.png)
+
+- クライアントとサーバーのリクエストとレスポンスが１対１
+
+---
+
+## Server streaming RPC
+
+<!-- _class: img-w60 -->
+![img](./grpc-server-streaming.png)
+
+- クライアントのリクエストに対してサーバーが複数のレスポンスを返す。
+
+---
+
+## Client streaming RPC
+
+<!-- _class: img-w60 -->
+![img](./grpc-client-streaming.png)
+
+- クライアントからサーバーに対して複数のリクエストを送る。
+
+
+---
+
+## Bidirectional streaming RPC
+
+<!-- _class: img-w60 -->
+![img](./grpc-bidrectional-streaming.png)
+
+- クライアントからはじめのリクエストが送られたあと、クライアントとサーバーはどちらも任意のタイミングでリクエストとレスポンスをやりとりできる。
+
+---
+
+## gRPC とは
 
 REST API ではストリーミングの対応ができず、別途 WebSocket サーバーを立てる必要がありますが gRPC であれば単一サーバーで双方向通信にも対応ができます。
 
@@ -138,9 +181,11 @@ REST API ではストリーミングの対応ができず、別途 WebSocket サ
 ## REST との比較
 
 REST はリソースを中心に、リソースに対する操作をHTTPメソッド（GET、POST、PATCH、DELETEなど）で表現をする。
-リソースは一般的にはJSONで表現される
+リソースは一般的にはJSONで表現される。
 
-また REST は設計原則であり規格ではなく、実装者がその原則に従って自分で仕様を決めます。
+また REST は設計原則であり規格ではなく、実装者がその原則に従って自分で仕様を決めることができます。
+
+※ そのため REST の原則を守っていない単なる HTTP を使う Web API も多い
 
 一方、 gRPC は関数を中心に、関数名と引数、戻り値で API を表現し、自動生成されたコードを呼び出す形で API を利用する。
 
@@ -642,7 +687,21 @@ func (UnimplementedGreetingServiceServer) mustEmbedUnimplementedGreetingServiceS
 
 ---
 
+## サーバー側の実装
+
 では、サーバー側の実装をしていきましょう。
+
+今回サーバー側でやることは
+
+- サーバー側のモジュールの準備
+- proto ファイルから生成された service のロジックを実装するサービスの実装
+- クライアントからのリクエストを受け付けるようサーバーの実装
+
+です。
+
+---
+
+## サーバー側の実装
 
 go のプロジェクトを初期化し、必要なライブラリをインストールします。
 ```bash
@@ -668,7 +727,7 @@ touch cmd/server/main.go
 ```go
 // 前方互換性をたもつために UnimplementedGreetingServiceServer を埋め込む
 type myServer struct {
-    hellopb.UnimplementedGreetingServiceServer
+    pb.UnimplementedGreetingServiceServer
 }
 
 // サーバーのコンストラクタ
@@ -683,9 +742,9 @@ func NewMyServer() *myServer {
 今回は HelloRequest の Name フィールドを受け取り、HelloResponse の Message フィールドに "Hello, {Name}!" というメッセージを返すようにします。
 
 ```go
-func (s *myServer) Hello(ctx context.Context, req *hellopb.HelloRequest) (*hellopb.HelloResponse, error) {
+func (s *myServer) Hello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloResponse, error) {
     log.Printf("received: %v", req.GetName())
-    return &hellopb.HelloResponse{
+    return &pb.HelloResponse{
         Message: fmt.Sprintf("Hello, %s!", req.GetName()),
       }, nil
 }
@@ -695,33 +754,23 @@ func (s *myServer) Hello(ctx context.Context, req *hellopb.HelloRequest) (*hello
 次に、 gRPC サーバーを起動するコードを書いてみます。
 
 ```go
-// 一部抜粋
 func main() {
-	port := 8080
-	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
-	if err != nil {
-		log.Fatalf("OMG failed to listen: %v", err)
-	}
-
-	server := grpc.NewServer()
-	hellopb.RegisterGreetingServiceServer(server, NewMyServer())
-
-	reflection.Register(server)
-
-	go func() {
-		log.Printf("let's start gRPC server with port: %v", port)
-		server.Serve(listener)
-	}()
-
-	quit := make(chan os.Signal)
-	signal.Notify(quit, os.Interrupt)
-	<-quit
-	log.Println("stopping gRPC server... bye bye!")
-	server.GracefulStop()
-
+    port := 8080
+    listener, err := net.Listen("tcp", fmt.Sprintf(":%d", port))
+    if err != nil {
+        log.Fatalf("failed to listen: %v", err)
+    }
+    
+    server := grpc.NewServer()
+    pb.RegisterGreetingServiceServer(server, NewMyServer())
+    
+    reflection.Register(server)
+    
+    if err := server.Serve(listener); err != nil {
+        log.Fatalf("failed to serve: %v", err)
+    }
 }
-
-````
+```
 
 ---
 
@@ -729,10 +778,10 @@ func main() {
 
 ```go
 server := grpc.NewServer()
-hellopb.RegisterGreetingServiceServer(server, NewMyServer())
+pb.RegisterGreetingServiceServer(server, NewMyServer())
 ```
 
-grpc.NewServer()で生成される server は gRPC のサーバインスタンスです。
+`grpc.NewServer()`で生成される server は gRPC のサーバインスタンスです。
 まだリッスンもしていません。
 ちなみに、NewServerの引数にはオプションを設定でき、最大の送受信データ量の変更やログ・認可などのミドルウェアの指定ができます。
 
@@ -872,14 +921,14 @@ func main() {
   }
   defer conn.Close()
 
-  client := hellopb.NewGreetingServiceClient(conn)
+  client := pb.NewGreetingServiceClient(conn)
 
   for {
     fmt.Print("好きな名前を入力してエンターキーを押してね: ")
     var name string
     fmt.Scan(&name)
 
-    req := &hellopb.HelloRequest{
+    req := &pb.HelloRequest{
       Name: name,
     }
 
@@ -916,7 +965,7 @@ grpc.WithTransportCredentials(insecure.NewCredentials()) は TLS を使わない
 
 作成した connection を使ってクライアントを作成します。
 ```go
-	client := hellopb.NewGreetingServiceClient(conn)
+	client := pb.NewGreetingServiceClient(conn)
 ```
 
 NewGreetingServiceClient は protoc で生成された hello_grpc.pb.go ファイルに定義されています。
@@ -963,14 +1012,16 @@ gRPC ではエラーハンドリングのためにステータスコードとエ
 すべての RPC コールはステータスコードを返します。
 ステータスは 0 ~ 16 番までの整数値です。
 
-| 番号 | コード名          |
-|------|-------------------|
+| 番号 | コード名             |
+|------|------------------|
 | 0    | OK               |
 | 1    | Canceled         |
 | 2    | Unknown          |
 | 3    | InvalidArgument  |
 | 4    | DeadlineExceeded |
 | 5    | NotFound         |
+| ...  | ...              |
+| 16   | Unauthenticated  |
 
 ---
 
