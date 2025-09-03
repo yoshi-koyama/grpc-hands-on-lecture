@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	hellopb "grpc-hands-on/gen/grpc"
+	pb "grpc-hands-on/gen/grpc"
 	"io"
 	"log"
 	"net"
@@ -22,7 +22,7 @@ func main() {
 	}
 
 	server := grpc.NewServer()
-	hellopb.RegisterGreetingServiceServer(server, NewMyServer())
+	pb.RegisterGreetingServiceServer(server, NewMyServer())
 
 	reflection.Register(server)
 
@@ -32,24 +32,24 @@ func main() {
 }
 
 type myServer struct {
-	hellopb.UnimplementedGreetingServiceServer
+	pb.UnimplementedGreetingServiceServer
 }
 
 func NewMyServer() *myServer {
 	return &myServer{}
 }
 
-func (s *myServer) Hello(ctx context.Context, req *hellopb.HelloRequest) (*hellopb.HelloResponse, error) {
+func (s *myServer) Hello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloResponse, error) {
 	log.Printf("received: %v", req.GetName())
-	return &hellopb.HelloResponse{
+	return &pb.HelloResponse{
 		Message: fmt.Sprintf("Hello, %s!", req.GetName()),
 	}, nil
 }
 
-func (s *myServer) HelloServerStream(req *hellopb.HelloRequest, stream hellopb.GreetingService_HelloServerStreamServer) error {
+func (s *myServer) HelloServerStream(req *pb.HelloRequest, stream pb.GreetingService_HelloServerStreamServer) error {
 	resCount := 5
 	for i := 0; i < resCount; i++ {
-		if err := stream.Send(&hellopb.HelloResponse{
+		if err := stream.Send(&pb.HelloResponse{
 			Message: fmt.Sprintf("[%d] Hello, %s!", i, req.GetName()),
 		}); err != nil {
 			log.Println("error occurred")
@@ -60,13 +60,13 @@ func (s *myServer) HelloServerStream(req *hellopb.HelloRequest, stream hellopb.G
 	return nil
 }
 
-func (s *myServer) HelloClientStream(stream hellopb.GreetingService_HelloClientStreamServer) error {
+func (s *myServer) HelloClientStream(stream pb.GreetingService_HelloClientStreamServer) error {
 	nameList := make([]string, 0)
 	for {
 		req, err := stream.Recv()
 		if errors.Is(err, io.EOF) {
 			message := fmt.Sprintf("Hello, %v!", nameList)
-			return stream.SendAndClose(&hellopb.HelloResponse{
+			return stream.SendAndClose(&pb.HelloResponse{
 				Message: message,
 			})
 		}
@@ -77,7 +77,7 @@ func (s *myServer) HelloClientStream(stream hellopb.GreetingService_HelloClientS
 	}
 }
 
-func (s *myServer) HelloBiStreams(stream hellopb.GreetingService_HelloBiStreamsServer) error {
+func (s *myServer) HelloBiStreams(stream pb.GreetingService_HelloBiStreamsServer) error {
 	for {
 		req, err := stream.Recv()
 		if errors.Is(err, io.EOF) {
@@ -87,7 +87,7 @@ func (s *myServer) HelloBiStreams(stream hellopb.GreetingService_HelloBiStreamsS
 			return err
 		}
 		message := fmt.Sprintf("Hello, %v!", req.GetName())
-		if err := stream.Send(&hellopb.HelloResponse{
+		if err := stream.Send(&pb.HelloResponse{
 			Message: message,
 		}); err != nil {
 			return err
