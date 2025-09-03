@@ -4,15 +4,14 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 	hellopb "grpc-hands-on/gen/grpc"
 	"io"
 	"log"
 	"net"
-	"os"
-	"os/signal"
 	"time"
+
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
@@ -27,17 +26,9 @@ func main() {
 
 	reflection.Register(server)
 
-	go func() {
-		log.Printf("let's start gRPC server with port: %v", port)
-		server.Serve(listener)
-	}()
-
-	quit := make(chan os.Signal)
-	signal.Notify(quit, os.Interrupt)
-	<-quit
-	log.Println("stopping gRPC server...")
-	server.GracefulStop()
-
+	if err := server.Serve(listener); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
 }
 
 type myServer struct {
