@@ -1,9 +1,15 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36" version="28.1.2">
   <diagram name="ページ1" id="Kkr0z-PITN3LohW95bRX">
-    <mxGraphModel dx="642" dy="1755" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1296" dy="1918" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="pV6HCDrv3q8hxqqbwgx0-74" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="234" y="3162" width="396" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="pV6HCDrv3q8hxqqbwgx0-68" value="" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="268" y="3204" width="333" height="45" as="geometry" />
+        </mxCell>
         <mxCell id="M_rPtJMRWAEh7ptbt8dk-1" value="gRPC Server&lt;div&gt;by Go&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="110" y="110" width="120" height="60" as="geometry" />
         </mxCell>
@@ -330,6 +336,48 @@
         </mxCell>
         <mxCell id="pV6HCDrv3q8hxqqbwgx0-55" value="&lt;font style=&quot;font-size: 16px;&quot;&gt;response&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
           <mxGeometry x="325.0000000000001" y="2930" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pV6HCDrv3q8hxqqbwgx0-57" value="&lt;font style=&quot;font-size: 30px;&quot;&gt;Client&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="98" y="3196" width="120" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="pV6HCDrv3q8hxqqbwgx0-58" value="&lt;font style=&quot;font-size: 30px;&quot;&gt;Server&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="642" y="3196" width="120" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="pV6HCDrv3q8hxqqbwgx0-65" value="1つのTCPコネクション" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="336.5" y="3371" width="187" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pV6HCDrv3q8hxqqbwgx0-66" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="274" y="3218.5" as="sourcePoint" />
+            <mxPoint x="595" y="3219" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pV6HCDrv3q8hxqqbwgx0-67" value="" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.415;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="590" y="3233" as="sourcePoint" />
+            <mxPoint x="274" y="3233.3500000000004" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pV6HCDrv3q8hxqqbwgx0-69" value="" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="267" y="3288" width="333" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="pV6HCDrv3q8hxqqbwgx0-70" value="" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="273" y="3302.5" as="sourcePoint" />
+            <mxPoint x="594" y="3303" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pV6HCDrv3q8hxqqbwgx0-71" value="" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.415;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="589" y="3317" as="sourcePoint" />
+            <mxPoint x="273" y="3317.3500000000004" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="pV6HCDrv3q8hxqqbwgx0-72" value="ストリームID 1" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="230" y="3169" width="114" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="pV6HCDrv3q8hxqqbwgx0-73" value="ストリームID 2" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="228" y="3255" width="114" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

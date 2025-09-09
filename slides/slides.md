@@ -98,7 +98,19 @@ SayHelloRequest は文字列型の name というフィールドを持ってい�
 こういった型を .proto 拡張子がつく proto ファイルに定義します。
 .proto ファイルは任意の言語のクライアント/サーバー用コードにコンパイルすることができます。
 
-スキーマファーストの開発になるのでAPI仕様書がない、情報が古いままだったという齟齬が発生しづらいです。
+---
+
+## gRPC とは
+
+gRPC による　API の開発はこの Protocol Buffers を用いて proto ファイルを作ることから始まります。
+
+Protocol Buffers には型があり、Protocol Buffers から生成されたコードにも同様の型付けが行われます。
+
+このように自ずとスキーマファーストの開発になるのが gRPC が選択される１つの理由です。
+
+
+
+
 
 ---
 
@@ -107,18 +119,17 @@ SayHelloRequest は文字列型の name というフィールドを持ってい�
 gRPC のもう一つの特徴として HTTP/2 を利用した高速通信があります。
 REST で開発する際は HTTP/1.1 を利用することが多いです。
 gRPC は HTTP/2 を利用することで以下のようなメリットがあります。
-HTTP/2 は従来の HTTP/1.1 と違い
 - 通信するときに情報がテキストでなくバイナリにシリアライズされて送られデータ量が圧縮されるためリソースが効率的に使用される
 - １つの TCP コネクションで複数のリクエスト/レスポンスのやりとりを行うので効率的な通信になる
 
-そのため gRPC は REST （HTTP/1.1）に比べて高速に通信できます。
+そのため gRPC は高速に通信できます。
 
 ---
 
 ## gRPC とは
 
-gRPC はストリーミングにも対応しています。
-ざっくり言うとストリーミングは「1回のコネクションを張りっぱなしにして、複数のメッセージを継続的にやり取りする方式」です。
+それから gRPC はストリーミングにも対応しています。
+ストリーミングは「1回のコネクションを張りっぱなしにして、複数のメッセージを継続的にやり取りする方式」です。
 REST APIでは「1リクエスト＝1レスポンス」なのに対し、ストリーミングは同じ呼び出しの中で何度も送受信できます。
 
 ---
@@ -149,7 +160,8 @@ gRPC で対応できる通信方式は以下の４つです。
 <!-- _class: img-w60 -->
 ![img](./grpc-server-streaming.png)
 
-- クライアントのリクエストに対してサーバーが複数のレスポンスを返す。
+- クライアントのリクエストに対してサーバーが複数のレスポンスを返す
+- たとえばイベント情報やニュースフィードなどの継続的なリアルタイム更新などに使えます
 
 ---
 
@@ -158,7 +170,8 @@ gRPC で対応できる通信方式は以下の４つです。
 <!-- _class: img-w60 -->
 ![img](./grpc-client-streaming.png)
 
-- クライアントからサーバーに対して複数のリクエストを送る。
+- クライアントからサーバーに対して複数のリクエストを送る
+- たとえば大きなファイルの分割アップロードに使えます
 
 
 ---
@@ -168,7 +181,8 @@ gRPC で対応できる通信方式は以下の４つです。
 <!-- _class: img-w60 -->
 ![img](./grpc-bidrectional-streaming.png)
 
-- クライアントからはじめのリクエストが送られたあと、クライアントとサーバーはどちらも任意のタイミングでリクエストとレスポンスをやりとりできる。
+- クライアントからはじめのリクエストが送られたあと、クライアントとサーバーはどちらも任意のタイミングでリクエストとレスポンスをやりとりできる
+- たとえばチャットアプリに使える
 
 ---
 
@@ -187,7 +201,7 @@ REST はリソースを中心に、リソースに対する操作をHTTPメソ�
 
 ※ そのため REST の原則を守っていない単なる HTTP を使う Web API も多い
 
-一方、 gRPC は関数を中心に、関数名と引数、戻り値で API を表現し、自動生成されたコードを呼び出す形で API を利用する。
+一方、 gRPC は関数を中心に、関数名と引数、戻り値で API を表現し、自動生成されたコードを呼び出す形で API を利用することができるフレームワークです。
 
 gRPC では proto ファイルの仕様や、自動生成されたコードの仕様を学び、それに従う必要があります。
 
@@ -264,8 +278,6 @@ gRPC では proto ファイルの仕様や、自動生成されたコードの�
 | プロトコル | HTTP/1.1 | ？？？  |
 | データ形式 | JSON     | ？？？  |
 
-- gRPC と　REST を比較して gRPC が優れていると言えるものは何でしょうか？
-- 反対に REST が向いているといえそうなユースケースは何でしょうか？
 - gRPC の課題としてどのようなものがあげられるでしょうか？
 
 ---
@@ -351,7 +363,7 @@ message とは構造化されたデータ型のこと
 
 ### import
 
-ほかの .proto ファイルを import して利用することもできる
+今回の例にはありませんでしたが、 ほかの .proto ファイルを import して利用することもできる
 
 ```protobuf
 // other.proto file
@@ -563,8 +575,10 @@ rpc Chat(stream ChatMessage) returns (stream ChatMessage);
 では、ここまでの内容をもとにクイズを出します。
 回答を考えてみましょう。
 
+先に出したクイズも混ぜてあります。
+
 - `service Greeter { rpc SayHello (HelloRequest) returns (HelloResponse); }` はどういうものか説明をしてみてください。
-- Protocol Buffers のスカラー型にはどのようなものがありましたか？
+- スカラー型、メッセージ型とはどういうものでしたか？
 - repeated フィールドとはどのようなものでしたか？
 - Well Known Types にはどのようなものがありましたか？
 - gRPC を使うことで得られるメリットとは何でしょうか？
@@ -730,6 +744,10 @@ service GreetingService {
 GreetingService は hello_grpc.pb.go ファイルで以下のように定義されています。
 まずはサーバーサイドで利用する箇所を見ていきます。
 
+---
+
+GreetingServiceServer というインターフェースが自動で生成されています。
+
 ```go
 type GreetingServiceServer interface {
 	Hello(context.Context, *HelloRequest) (*HelloResponse, error)
@@ -739,6 +757,8 @@ type GreetingServiceServer interface {
 
 ---
 
+`GreetingServiceServer` インターフェースには Hello メソッドと mustEmbedUnimplementedGreetingServiceServer メソッドが含まれています。
+
 ```go
 type GreetingServiceServer interface {
 	Hello(context.Context, *HelloRequest) (*HelloResponse, error)
@@ -746,12 +766,24 @@ type GreetingServiceServer interface {
 }
 ```
 
-`GreetingServiceServer` インターフェースが定義されており、 Hello メソッドが含まれています。
-このインターフェースを継承するようなサーバー側の実装を自分で作成することで gRPC サーバーがつくれます。
+このインターフェースを継承するような実装を自分で作成することで gRPC サーバーがつくれます。
 
-`mustEmbedUnimplementedGreetingServiceServer()` ですが、これは別箇所で定義されている `UnimplementedGreetingServiceServer` 構造体を埋め込むことを強制するためのダミーのメソッドです。
+```go
+type myServer struct {
+    pb.UnimplementedGreetingServiceServer
+}
+func (s *myServer) Hello(ctx context.Context, req *pb.HelloRequest) (*pb.HelloResponse, error) {
+    // logic
+}
+```
+
+ただし、 `mustEmbedUnimplementedGreetingServiceServer()` ですが、
+`GreetingServiceServer`と同ファイルに定義されている `UnimplementedGreetingServiceServer` 構造体を埋め込むことを強制するためのダミーのメソッドです。
 
 ---
+
+ここで `UnimplementedGreetingServiceServer` を見てみます。
+`UnimplementedGreetingServiceServer` も protoc コマンドで自動生成されます。
 
 ```go
 type UnimplementedGreetingServiceServer struct{}
@@ -762,14 +794,21 @@ func (UnimplementedGreetingServiceServer) Hello(context.Context, *HelloRequest) 
 func (UnimplementedGreetingServiceServer) mustEmbedUnimplementedGreetingServiceServer() {}
 ```
 
-`UnimplementedGreetingServiceServer` を埋め込まない場合、たとえば `Hello2` という新しい RPC メソッドが追加されたときに `GreetingServiceServer` インターフェースには `Hello2` が追加されるが、自身の実装には `Hello` しかないためビルドエラーになります。
-この `UnimplementedGreetingServiceServer` を埋め込むことで、将来 `GreetingService` に新しい gRPC のメソッドが追加された場合でもビルドが壊れないようになります。
+`Hello` が呼び出されたときに Unimplemented エラーを返す実装と `mustEmbedUnimplementedGreetingServiceServer` の空の実装があります。
+
+もし、新たに `Hello2` という関数が定義されて protoc でコンパイルすると自動で `UnimplementedGreetingServiceServer` にも　`Hello2` が追加されます。
 
 ---
 
-このことは自動生成されるコード内にもコメントで説明されています。
+この UnimplementedGreetingServiceServer はサーバー実装するときの構造体に埋め込むことで効果が発揮されます。
+```go
+type myServer struct {
+    pb.UnimplementedGreetingServiceServer
+}
+```
 
-> UnimplementedGreetingServiceServer must be embedded to have forward compatible implementations.
+`UnimplementedGreetingServiceServer` を埋め込まない場合、たとえば `Hello2` という新しい RPC メソッドが追加されたときに `GreetingServiceServer` インターフェースには `Hello2` が追加されるが、自身の実装には `Hello` しかないためビルドエラーになります。
+このように Go の埋め込みを利用することで、将来 `GreetingService` に新しい gRPC のメソッドが追加された場合でもビルドが壊れないようになります。
 
 ---
 
@@ -851,7 +890,8 @@ func main() {
     pb.RegisterGreetingServiceServer(server, NewMyServer())
     
     reflection.Register(server)
-    
+
+	log.Printf("gRPC server is starting on port %d...", port)
     if err := server.Serve(listener); err != nil {
         log.Fatalf("failed to serve: %v", err)
     }
@@ -873,11 +913,16 @@ pb.RegisterGreetingServiceServer(server, NewMyServer())
 
 ---
 
+```go
+server := grpc.NewServer()
+pb.RegisterGreetingServiceServer(server, NewMyServer())
+```
+
 `RegisterGreetingServiceServer` は自動生成した hello_grpc.pb.go ファイルに定義されています。
 
-gRPC の server を RegisterGreetingServiceServer の第一引数に、第二引数には今回作成した GreetingServiceServer インターフェースを実装するサーバーを渡すことで server に GreetingService が登録されます。
+第一引数に gRPC の server 変数を、第二引数には今回作成した GreetingServiceServer インターフェースを実装するサーバーを渡すことで server に GreetingService が登録されます。
 
-これらの作業をサーバー起動前に実施することでこの gRPC サーバーは Hello という RPC メソッドを提供できるようになります。
+この作業をサーバー起動前に実施することでこの gRPC サーバーは Hello という RPC メソッドを提供できるようになります。
 
 ---
 
@@ -885,7 +930,7 @@ gRPC の server を RegisterGreetingServiceServer の第一引数に、第二引
 
 ```bash
 % go run cmd/server/main.go
-2025/08/28 16:33:18 let's start gRPC server with port: 8080
+2025/08/28 16:33:18 gRPC server is starting on port 8080...
 ```
 
 起動できました。
@@ -894,7 +939,7 @@ gRPC の server を RegisterGreetingServiceServer の第一引数に、第二引
 
 ### 動作確認
 
-動作確認ですが gRPC クライアントを Go で実装する方法もありますが、今回はコマンドラインツールの grpcurl を使って確認します。
+動作確認ですが gRPC クライアントとして grpcurl を使って確認します。
 
 ```bash
 brew install grpcurl
@@ -1214,7 +1259,7 @@ REST はシンプルで学習コストが低い一方、 gRPC はスキーマフ
 - ユニットテスト、インテグレーションテスト
 - Kubernetes 環境に gRPC のサービスをデプロイ
 - 大量リクエスト時のパフォーマンスチューニング
-- grpc-gateway を用いた JSON/HTTP1.1 クライアント互換性の確保
+- grpc-gateway や connect を用いた JSON/HTTP1.1 クライアント互換性の確保
 
 次回以降の機会があればこれらについて深堀りする講義をしてみたいと思います。
 
